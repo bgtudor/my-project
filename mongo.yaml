@@ -1,0 +1,27 @@
+version: '3'
+services:
+  my-app:
+   image: 651706774865.dkr.ecr.eu-central-1.amazonaws.com/my-app:1.x
+   ports:
+   - 3000:3000
+  mongodb:
+   image: mongo
+   ports:
+     - 27017:27017
+   environment:
+     - MONGO_INITDB_ROOT_USERNAME=admin
+     - MONGO_INITDB_ROOT_PASSWORD=pass
+   volumes:
+     - mongo-data:/data/db #path differs for each database (e.g. mysql: var/lib/mysql or for postgres: var/lib/postgresql/data)docker 
+  mongo-express:
+   image: mongo-express
+   restart: always # fixes MongoNetworkError when mongodb is not ready when mongo-express starts
+   ports:
+     - 8080:8081
+   environment:
+     - ME_CONFIG_MONGODB_ADMINUSERNAME=admin
+     - ME_CONFIG_MONGODB_ADMINPASSWORD=password
+     - ME_CONFIG_MONGODB_SERVER=mongodb
+volumes:
+  mongo-data:
+    driver: local
